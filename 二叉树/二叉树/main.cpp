@@ -13,6 +13,9 @@
 
 #include <iostream>
 #include <vector>
+#include <stack>
+
+
 using namespace std;
 struct BinaryTreeNode
 {
@@ -93,6 +96,28 @@ void preTraversalTreeNode(BinaryTreeNode *treeNode){
     }
 }
 
+//前序遍历非递归
+vector<int> preTraversalTreeNode2(BinaryTreeNode *treeNode){
+    
+    stack<BinaryTreeNode *> stack;
+    vector<int> v;
+    BinaryTreeNode *t = treeNode;
+    stack.push(t);
+    while (!stack.empty()) {
+        t = stack.top();
+        stack.pop();
+        v.push_back(t -> m_nValue);
+        if (t -> m_pRight != NULL) {
+            stack.push(t -> m_pRight);
+        }
+        if (t -> m_pLeft != NULL) {
+            stack.push(t -> m_pLeft);
+        }
+        
+    }
+    return v;
+}
+
 //二叉树的中序遍历(递归)
 void inTraversalTreeNode(BinaryTreeNode *treeNode) {
     
@@ -103,6 +128,27 @@ void inTraversalTreeNode(BinaryTreeNode *treeNode) {
     if (treeNode -> m_pRight != NULL) {
         inTraversalTreeNode(treeNode -> m_pRight);
     }
+}
+
+//中序遍历非递归
+vector<int> inTraversalTreeNode2(BinaryTreeNode *treeNode) {
+    stack<BinaryTreeNode *> inStack;
+    vector<int> inOrder;
+    BinaryTreeNode *tree = treeNode;
+    while (tree || !inStack.empty()) {
+        //把所有左边的节点加入到栈
+        while ( tree != NULL) {
+            inStack.push(tree);
+            tree = tree -> m_pLeft;
+        }
+        //取出栈顶的节点 也就是最后一个节点
+        tree = inStack.top();
+        //pop掉顶节点
+        inStack.pop();
+        inOrder.push_back(tree -> m_nValue);
+        tree = tree -> m_pRight;
+    }
+    return inOrder;
 }
 
 
@@ -126,8 +172,9 @@ int main(int argc, const char * argv[]) {
     vector<int> inOrder( in,  in + 8);
     BinaryTreeNode *treeNode = ConstructBinaryTree(preOrder, inOrder);
 //    preTraversalTreeNode(treeNode);
-    inTraversalTreeNode(treeNode);
-
+//    inTraversalTreeNode(treeNode);
+    vector<int> v = inTraversalTreeNode2(treeNode);
+    vector<int> v2 = preTraversalTreeNode2(treeNode);
     
     return 0;
 }

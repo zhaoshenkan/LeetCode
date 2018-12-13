@@ -8,6 +8,8 @@
 
 #include <iostream>
 
+using namespace std;
+
 struct ListNode
 {
     int m_nKey;
@@ -60,6 +62,53 @@ void removeNode(ListNode ** phead, int value){
     deleteNode = NULL;
 }
 
+//O(1)时间删除节点
+void deleteNode(ListNode **phead,ListNode *deleteNode){
+    
+    if (*phead == NULL || deleteNode == NULL) {
+        return;
+    }
+    ListNode *headnode = *phead;
+    if (headnode ->m_nKey == deleteNode -> m_nKey) { //删除的节点是头节点
+        headnode -> m_pNext = NULL;
+        delete deleteNode;
+        deleteNode = NULL;
+    } else if(deleteNode -> m_pNext != NULL) { //该链表有多个节点并且删除的不是尾节点
+        ListNode *nextNode = deleteNode -> m_pNext;
+        deleteNode -> m_nKey = nextNode -> m_nKey;
+        deleteNode -> m_pNext = nextNode -> m_pNext;
+        delete deleteNode;
+        deleteNode = NULL;
+    } else { //删除的是尾节点 这个时候只能从头遍历到尾节点的前一个节点，把 node -> next = null
+        
+        while (headnode -> m_pNext != deleteNode) {
+            headnode = headnode -> m_pNext;
+        }
+        headnode -> m_pNext = NULL;
+        delete deleteNode;
+        deleteNode = NULL;
+    }
+    
+    
+    
+    
+    
+}
+
+//链表中倒数第k个节点 思路:两个点相差K,当一个点到末尾的时候，另外一个点刚好是倒数k
+void printNodeIndex(ListNode *pNode,int k){
+    
+    ListNode *node = pNode;
+    for (int i = 1; i < k; i ++) {
+        node = node -> m_pNext;
+    };
+    while (node -> m_pNext != NULL) {
+        node = node -> m_pNext;
+        pNode = pNode -> m_pNext;
+    };
+    cout << pNode -> m_nKey << endl;
+}
+
 //从尾到头打印链表 递归本质上是栈结构
 void PrintListReversingly(ListNode *pHead) {
     if (pHead != NULL) {
@@ -72,18 +121,16 @@ void PrintListReversingly(ListNode *pHead) {
 
 int main(int argc, const char * argv[]) {
     
-    using namespace std;
     ListNode *pHead = NULL;
     
     for (int i = 1; i < 10; i ++) {
         AddToTail(&pHead, i);
     }
     
-    //    PrintListReversingly(pHead);
-    removeNode(&pHead, 6);
-    PrintListReversingly(pHead);
-    
-    
+        PrintListReversingly(pHead);
+//    removeNode(&pHead, 6);
+//    PrintListReversingly(pHead);
+    printNodeIndex(pHead, 1);
     return 0;
 }
 
